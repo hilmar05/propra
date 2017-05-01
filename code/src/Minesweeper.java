@@ -33,15 +33,32 @@ public class Minesweeper {
 			}							
 			while(spass == true){																			//
 				System.out.println("Erneut spielen: Ja? Nein?");											//Ausgabe an den Nutzer
-				//StdDraw.clear();																			//
+																							//
 				System.out.println("Natürlich willst du nochmal spielen, ich sehe doch wie viel Spass dir das Spiel gemacht hat"); //Spassausgabe		
 				System.out.println("HELLO!");																			//
 				spass = ausfuehrung();
+				
 				
 				StdDraw.show(500);																			//Methode für Spielvers. 2 wird aufgerufen
 			}
 
 	}
+	public static void drawCoordinates(){
+		for(int p1=1;p1<10;p1++){
+			StdDraw.textRight(0.02,0.98,"0");
+			String str = String.valueOf(p1);
+			StdDraw.textRight(0.02,0.95-(p1*0.1),str);
+			
+		}
+		
+		for(int p1=1;p1<10;p1++){
+			String str = String.valueOf(p1);
+			StdDraw.textRight(0.02+(p1*0.1),0.98,str);
+		}
+		
+	}
+	
+	
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -65,18 +82,12 @@ public class Minesweeper {
 				StdDraw.line(linien*p1,linien*p2,linien*p2,linien*p2);				//Erklärung entfällt, da zu zeitaufwändig
 				
 			}
-		}
-		for(int p1=1;p1<random+1;p1++){
-			StdDraw.textRight(0.02,0.98,"0");
-			String str = String.valueOf(p1);
-			StdDraw.textRight(0.02,0.95-(p1*0.1),str);
-			
+			System.out.println("habe gezeichnet");
 		}
 		
-		for(int p1=1;p1<random;p1++){
-			String str = String.valueOf(p1);
-			StdDraw.textRight(0.02+(p1*0.1),0.98,str);
-		}
+		
+		drawCoordinates();
+		System.out.println("Koordinaten wurden gezeichnet");
 		
 		boolean [][] bool = new boolean [random+1][random+1];						//2-dim boolean Array mit zusätzlicher Spalte und Zeile zur 																					//Überprüfung für Spielende
 		boolean [][] bool2 = new boolean [random+1][random+1];											
@@ -96,10 +107,13 @@ public class Minesweeper {
 		for(int t=0; t<random;t++){													//Zeilen werden durchgegangen
 			for(int s=0;s<random;s++){												//Spalten werden durchgegangen
 				boar2[(random-1)-t][(random-1)-s]=boar[t][s];						//boar-Array wird umgedreht und als boar2 gespeichert
+				
 			}
 		}
 		
 		k=0;																		//Zählvariable
+		drawCoordinates();
+		System.out.println("DADADA");
 		int zeilenz�hler=0;
 		int spaltenz�hler=0;
 		while(bool2[random][random]==false && (random*random)-(minen+ko)>0){		//Solange keine Mine geöffnet wurde oder eine nicht Mine noch nicht 																					//geöffnet wurde 
@@ -127,29 +141,37 @@ public class Minesweeper {
 				try{
 					spalte=StdIn.readInt();
 					spaltenz�hler++;
+					System.out.println(spaltenz�hler);
 					if(spalte<0||spalte>=random){
 						System.out.println("Falsche Eingabe!Bitte korrigieren");
 					}															
-				}														//Ausgabe an den Nutzer
+				}																	//Ausgabe an den Nutzer
 				catch(InputMismatchException e){
 					System.out.println("Ung�ltige Eingabe! Bitte korrigieren");
 				}
-																		//zeile wird zur Eingabe des Nutzers
-																				//k wird wieder als Zählvariable genutzt
-																		//zeile soll aber immernoch im Array liegen
-																				//k wird um eins erhöht
-																			//wenn der Nutzer 3 falsche Eingaben macht
-																			//Spassausgabe
+																					//zeile wird zur Eingabe des Nutzers
+																					//k wird wieder als Zählvariable genutzt
+																					//zeile soll aber immernoch im Array liegen
+																					//k wird um eins erhöht
+																					//wenn der Nutzer 3 falsche Eingaben macht
+																					//Spassausgabe
 					
-																			//Neue Eingabe wird erwartet
-																			//spalte wird zur Eingabe des Nutzers
+																					//Neue Eingabe wird erwartet
+																					//spalte wird zur Eingabe des Nutzers
 				}	
 					
 			k=0;
+			
 			if(isMine(boar,zeile,spalte)&&zeilenz�hler==1&&spaltenz�hler==1){
 				System.out.println("Im ersten Feld liegt eine Mine! ! !");
-				//boar2 = makeRandomBoard(random,random,minen);
 				
+				boar = makeRandomBoard(random,random,minen);
+				
+				for(int t=0; t<random;t++){													//Zeilen werden durchgegangen
+					for(int s=0;s<random;s++){												//Spalten werden durchgegangen
+						boar2[(random-1)-t][(random-1)-s]=boar[t][s];						//boar-Array wird umgedreht und als boar2 gespeichert
+					}
+				}
 			}	
 																	//Zeilen werden durchgegangen
 																	//Spalten werden durchgegangen
@@ -200,19 +222,20 @@ public class Minesweeper {
 			for(int s=0;s<random;s++){
 				String sp = Integer.toString(countMines(boar2,t,s));			//hier gucken ob boar oder boar2 eingesetzt werden müssen
 				StdDraw.text(1-(halb+(linien*s)),halb+(linien*t),sp);
+				drawCoordinates();
 			}
 		}
 		//System.out.println((random*random)-(minen+ko));						//Testausgabe
 		if(k==10){															//aus vorherigen Zeilen ergibt sich: Wird aufgerufen, wenn alle nicht-Minen 																			//geöffnet wurden
 			System.out.println("Victory!");									//Ausgabe
 			StdDraw.show();
-			StdDraw.pause(1000000);
+			StdDraw.pause(10000);
 			StdDraw.clear();
 		}
 		else{																//Wenn auf eine Mine gedrückt wurde
 			System.out.println("Verkackt!");								//Ausgabe
 			StdDraw.show();
-			StdDraw.pause(100000);
+			StdDraw.pause(10000);
 			StdDraw.clear();
 		}
 		return true;
@@ -225,7 +248,8 @@ public class Minesweeper {
 		int z = board.length;
 		int s = board[0].length;
 		//boolean [][] out = new boolean [z+1][z+1];
-			
+		
+		
 		if(isMine(board,zeile,spalte)==true){
 			uncovered[zeile][spalte]=true;
 			uncovered[z][s]=true;
@@ -293,14 +317,21 @@ public class Minesweeper {
 	}
 	public static int[][] makeRandomBoard(int height, int width, int mines) {
     	int[][] board = new int[height][width];
-   		for (int i =0; i<mines; i++) {
-   			
+   		int x=0;
+   		while( x<10){
     	int[] pos = selectRandomPosition(height,width);
     	   
-    	board[pos[0]][pos[1]] = 1;
-    	    	
-    	        
+    	if(board[pos[0]][pos[1]] == 1){
+    		System.out.println("Feld besetzt");
+    		x--;
     	}
+    	else{
+    		
+    	}  	
+    	board[pos[0]][pos[1]]=1;
+    	System.out.println("added");
+    	x++;
+   		}
     	
     	return board;
   	}
